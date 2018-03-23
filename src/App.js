@@ -12,36 +12,40 @@ export default class App extends Component {
             title: '',
             eventId: '',
             fireRedirect: false,
-            loggedIn: false
         };
-    }
-
-    componentWillMount() {
-        Auth.signIn("admin@example.com", "Passw0rd!")
-            .then(user => console.log(user))
-            .catch(err => console.log(err));
     }
 
     handleChange = (e, {name, value}) => this.setState({[name]: value})
 
     handleSubmit = async e => {
         e.preventDefault();
-        this.setState({eventId: shortid.generate()})
+
+        try {
+            await Auth.signIn("admin@example.com", "Passw0rd!");
+            console.log("Logged in");
+        } catch (e) {
+            alert("signin problem: " + e);
+        }
+
+        this.setState({eventId: shortid.generate()});
+
         try {
             await this.createEvent({
                 eventId: this.state.eventId,
                 user: this.state.user,
                 title: this.state.title
             });
+            console.log("event created")
+            this.setState({fireRedirect: true})
         } catch (e) {
             alert(e);
-            this.setState({isLoading: false});
         }
 
-        this.setState({fireRedirect: true})
     };
 
     createEvent(event) {
+        console.log("calling create event")
+
         return API.post("events", "/events", {
             body: event
         });

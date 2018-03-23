@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {Container, Header} from "semantic-ui-react";
 import {API} from "aws-amplify";
+import {Auth} from "aws-amplify/lib/index";
 
 export default class Event extends Component {
     constructor(props) {
@@ -20,7 +21,14 @@ export default class Event extends Component {
         // }
 
         try {
-            const event = await this.getEvent();
+            await Auth.signIn("admin@example.com", "Passw0rd!");
+            console.log("Logged in");
+        } catch (e) {
+            alert("signin problem: " + e);
+        }
+
+        try {
+            const event = await this.getEvent(this.props.match.params.eventId);
             this.setState({
                 event
             });
@@ -29,8 +37,9 @@ export default class Event extends Component {
         }
     }
 
-    getEvent() {
-        return API.get("events", `/events/${this.props.match.params.eventId}`);
+    getEvent(id) {
+        console.log("Calling get: " + id)
+        return API.get("events", `/events/${id}`);
     }
 
     render() {
