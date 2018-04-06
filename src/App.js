@@ -30,17 +30,26 @@ export default class App extends Component {
         this.setState({eventId: shortid.generate()});
 
         try {
-            await API.post("events", "/events", {
+            await this.createEvent({
                 eventId: this.state.eventId,
                 user: this.state.user,
                 title: this.state.title
             });
-            this.setState({fireRedirect: true});
+            console.log("event created")
+            this.setState({fireRedirect: true})
         } catch (e) {
             alert(e);
         }
 
     };
+
+    createEvent(event) {
+        console.log("calling create event")
+
+        return API.post("events", "/events", {
+            body: event
+        });
+    }
 
     render() {
         const {user, title, eventId, fireRedirect} = this.state
