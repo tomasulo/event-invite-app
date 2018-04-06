@@ -1,105 +1,81 @@
 import React, {Component} from 'react';
-import {Button, Form, Grid, Header, Segment} from "semantic-ui-react";
-import shortid from "shortid";
-import {Redirect} from "react-router-dom";
-import {API, Auth} from "aws-amplify";
+import {Container, Menu} from "semantic-ui-react";
+import Routes from "./Routes";
+import {Link, withRouter} from "react-router-dom";
+import {Auth} from "aws-amplify";
 
-export default class App extends Component {
-    constructor() {
-        super();
+class App extends Component {
+    constructor(props) {
+        super(props);
+
         this.state = {
-            user: '',
-            title: '',
-            eventId: '',
-            fireRedirect: false,
+            isAuthenticated: false,
+            isAuthenticating: true,
+            activeItem: 'home'
         };
     }
 
-    handleChange = (e, {name, value}) => this.setState({[name]: value})
-
-    handleSubmit = async e => {
-        e.preventDefault();
-
-        try {
-            await Auth.signIn("admin@example.com", "Passw0rd!");
-            console.log("Logged in");
-        } catch (e) {
-            alert("signin problem: " + e);
-        }
-
-        this.setState({eventId: shortid.generate()});
-
-        try {
-            await this.createEvent({
-                eventId: this.state.eventId,
-                user: this.state.user,
-                title: this.state.title
-            });
-            console.log("event created")
-            this.setState({fireRedirect: true})
-        } catch (e) {
-            alert(e);
-        }
-
+    userHasAuthenticated = authenticated => {
+        this.setState({isAuthenticated: authenticated});
     };
 
-    createEvent(event) {
-        console.log("calling create event")
 
-        return API.post("events", "/events", {
-            body: event
-        });
+    handleItemClick = (e, {name}) => this.setState({activeItem: name});
+
+    handleLogout = async event => {
+        await Auth.signOut();
+        this.userHasAuthenticated(false);
+        this.props.history.push("/login");
+    };
+
+    async componentDidMount() {
+        try {
+            if (await Auth.currentSession()) {
+                this.userHasAuthenticated(true);
+            }
+        }
+        catch (e) {
+            if (e !== 'No current user') {
+                alert(e);
+            }
+        }
+
+        this.setState({isAuthenticating: false});
     }
 
     render() {
-        const {user, title, eventId, fireRedirect} = this.state
-
+        const childProps = {
+            isAuthenticated: this.state.isAuthenticated,
+            userHasAuthenticated: this.userHasAuthenticated
+        };
+        const {activeItem} = this.state;
         return (
-            <div className='login-form'>
-                <style>{`
-            body > div,
-            body > div > div,
-            body > div > div > div.login-form {
-              height: 100%;
-            }
-          `}</style>
-                <Grid
-                    textAlign='center'
-                    style={{height: '100%'}}
-                    verticalAlign='middle'
-                >
-                    <Grid.Column style={{maxWidth: 450}}>
-                        <Header as='h2' color='teal' textAlign='center'>
-                            {' '}Create new event
-                        </Header>
-                        <Form size='large' onSubmit={this.handleSubmit}>
-                            <Segment stacked>
-                                <Form.Input
-                                    fluid
-                                    icon='user'
-                                    iconPosition='left'
-                                    placeholder='Your name'
-                                    name='user'
-                                    value={user}
-                                    onChange={this.handleChange}
-                                />
-                                <Form.Input
-                                    fluid icon='birthday'
-                                    iconPosition='left'
-                                    placeholder='Eventname'
-                                    name='title'
-                                    value={title}
-                                    onChange={this.handleChange}
-                                />
-                                <Button color='teal' fluid size='large'>Create</Button>
-                            </Segment>
-                        </Form>
-                    </Grid.Column>
-                </Grid>
-                {fireRedirect && (
-                    <Redirect to={'/event/' + eventId}/>
-                )}
+            <div>
+                <Container text>
+                    <Menu pointing secondary>
+                        <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick} as={Link}
+                                   to='/'/>
+                        <Menu.Item name='messages' active={activeItem === 'messages'} onClick={this.handleItemClick}/>
+                        <Menu.Item name='friends' active={activeItem === 'friends'} onClick={this.handleItemClick}/>
+                        {this.state.isAuthenticated
+                            ? <Menu.Menu position='right'>
+                                <Menu.Item name='logout' active={activeItem === 'logout'}
+                                           onClick={this.handleLogout}/>
+                            </Menu.Menu>
+                            : <Menu.Menu position='right'>
+                                <Menu.Item name='login' as={Link} to='/login' active={activeItem === 'login'}
+                                           onClick={this.handleItemClick}/>
+                                < Menu.Item name='signup' as={Link} to='/signup' active={activeItem === 'signup'}
+                                            onClick={this.handleItemClick}/>
+
+                            </Menu.Menu>
+                        }
+                    </Menu>
+                    <Routes childProps={childProps}/>
+                </Container>
             </div>
         )
     }
 }
+
+export default withRouter(App);

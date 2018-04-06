@@ -2,15 +2,15 @@ import React from 'react';
 import './index.css';
 import 'semantic-ui-css/semantic.min.css';
 import App from './App';
-import Event from './components/Event';
 import ReactDOM from 'react-dom';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {BrowserRouter as Router} from 'react-router-dom';
 import Amplify from "aws-amplify";
 import config from "./config";
+import registerServiceWorker from "react-scripts/template/src/registerServiceWorker";
 
 Amplify.configure({
     Auth: {
-        mandatorySignIn: false,
+        mandatorySignIn: true,
         region: config.cognito.REGION,
         userPoolId: config.cognito.USER_POOL_ID,
         identityPoolId: config.cognito.IDENTITY_POOL_ID,
@@ -29,12 +29,9 @@ Amplify.configure({
 
 ReactDOM.render(
     <Router>
-        <div>
-            <Route exact path="/" component={App}/>
-            <Route path="/event/:eventId" component={Event}/>
-        </div>
-    </Router>
-    ,
-    document.getElementById('root')
+        <App/>
+    </Router>,
+    document.getElementById("root")
 );
 
+registerServiceWorker();
