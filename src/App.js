@@ -30,37 +30,23 @@ export default class App extends Component {
         this.setState({eventId: shortid.generate()});
 
         try {
-            await this.createEvent({
+            await API.post("events", "/events", {
                 eventId: this.state.eventId,
                 user: this.state.user,
                 title: this.state.title
             });
-            console.log("event created")
-            this.setState({fireRedirect: true})
+            this.setState({fireRedirect: true});
         } catch (e) {
             alert(e);
         }
 
     };
 
-    createEvent(event) {
-        console.log("calling create event")
-
-        return API.post("events", "/events", {
-            body: event
-        });
-    }
-
     render() {
         const {user, title, eventId, fireRedirect} = this.state
 
         return (
             <div className='login-form'>
-                {/*
-            Heads up! The styles below are necessary for the correct render of this example.
-            You can do same with CSS, the main idea is that all the elements up to the `Grid`
-            below must have a height of 100%.
-          */}
                 <style>{`
             body > div,
             body > div > div,
