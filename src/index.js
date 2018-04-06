@@ -5,7 +5,7 @@ import App from './App';
 import Event from './components/Event';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
-import Amplify, {Auth} from "aws-amplify";
+import Amplify from "aws-amplify";
 import config from "./config";
 
 Amplify.configure({
