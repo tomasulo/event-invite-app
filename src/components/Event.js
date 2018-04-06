@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {Container, Form, Header} from "semantic-ui-react";
 import {Attendance} from "./Attendance";
+import {Title} from "./Title";
 
 // TODO inject via environment
 const API = 'https://can6ek1adi.execute-api.eu-central-1.amazonaws.com/prod/events/';
@@ -11,6 +12,7 @@ const options = [
     {key: 'maybe', text: 'Maybe', value: 'Maybe'},
 ];
 
+// TODO move Form handling into Attendance
 export default class Event extends Component {
     constructor(props) {
         super(props);
@@ -36,6 +38,8 @@ export default class Event extends Component {
             });
     }
 
+    handleChange = (e, {name, value}) => this.setState({[name]: value})
+
     updateAttendance = () => {
         this.state.attendance.push({
             name: this.state.name,
@@ -47,14 +51,12 @@ export default class Event extends Component {
             name: ''
         });
 
-        let payload = {
-            attendance: this.state.attendance
-        };
-
         fetch(API + this.props.match.params.eventId + "/attendance", {
             method: 'PUT',
-            body: JSON.stringify(payload)
-        }).then(response => response.json());
+            body: JSON.stringify({
+                attendance: this.state.attendance
+            })
+        }).then(response => console.log(response.json()));
     };
 
     updateRsvp = (e, {value}) => {
@@ -66,36 +68,41 @@ export default class Event extends Component {
     };
 
     render() {
-
-        // TODO if event is null
-
+        const {name, rsvp, event, attendance} = this.state;
         return (
             <div>
-                {this.state.event &&
+                {event &&
                 <Container text style={{marginTop: '4em'}}>
-                    <Header as='h1' dividing>{this.state.event.title}</Header>
-                    <Header as='h3'> Created by {this.state.event.user}</Header>
-                    <p>
-                        TODO: picture
-                        TODO: description
-                        TODO: date and time
-                        TODO: attendance
-                        TODO: comments (need to login?)
-                    </p>
+
+                    <Title title={event.title} user={event.user}/>
+
+                    <Header as='h3'>Description</Header>
+
+                    <Container text>
+                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+                        ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
+                        dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
+                        sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+                        invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                        justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+                        ipsum dolor sit amet. </Container>
 
                     <Header as='h3'>Attendance</Header>
 
-                    <Attendance attendance = {this.state.attendance} />
+                    <Attendance attendance={attendance}/>
 
                     <Form onSubmit={this.updateAttendance}>
-                        <Form.Group widths='equal'>
-                            <Form.Input fluid label='Name' placeholder='Name' onChange={this.updateName}
-                                        value={this.state.name}/>
-                            <Form.Select label='RSVP' options={options} placeholder='Yes' onChange={this.updateRsvp}
-                                         value={this.state.rsvp}/>
+                        <Form.Group>
+                            <Form.Input name='name' width={8} fluid label='Name' placeholder='Name'
+                                        onChange={this.handleChange}
+                                        value={name}/>
+                            <Form.Select name='rsvp' width={1} label='RSVP' options={options} placeholder='Yes'
+                                         onChange={this.handleChange}
+                                         value={rsvp}/>
                         </Form.Group>
                         <Form.Button>Save</Form.Button>
                     </Form>
+
                 </Container>}
             </div>
         );
