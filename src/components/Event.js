@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {Container, Form, Header} from "semantic-ui-react";
+import {Attendance} from "./Attendance";
 
 // TODO inject via environment
 const API = 'https://can6ek1adi.execute-api.eu-central-1.amazonaws.com/prod/events/';
@@ -65,6 +66,9 @@ export default class Event extends Component {
     };
 
     render() {
+
+        // TODO if event is null
+
         return (
             <div>
                 {this.state.event &&
@@ -81,11 +85,7 @@ export default class Event extends Component {
 
                     <Header as='h3'>Attendance</Header>
 
-                    <ul>
-                        {this.state.attendance.map(function (attendee, index) {
-                            return <li key={index}>{attendee.name}: {attendee.rsvp}</li>;
-                        })}
-                    </ul>
+                    <Attendance attendance = {this.state.attendance} />
 
                     <Form onSubmit={this.updateAttendance}>
                         <Form.Group widths='equal'>
