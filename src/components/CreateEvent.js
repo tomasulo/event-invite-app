@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import shortid from "shortid";
-import {API} from "aws-amplify/lib/index";
+import {API, Auth} from "aws-amplify/lib/index";
 import {Button, Form, Grid, Header, Loader, Segment} from "semantic-ui-react";
 
 export default class CreateEvent extends Component {
@@ -9,8 +9,15 @@ export default class CreateEvent extends Component {
         this.state = {
             user: '',
             title: '',
-            isLoading: null
+            isLoading: null,
+            userId: ''
         };
+    }
+
+    componentDidMount() {
+        Auth.currentAuthenticatedUser().then(user => {
+            this.setState({userId: user.username});
+        });
     }
 
     handleChange = (e, {name, value}) => this.setState({[name]: value})
