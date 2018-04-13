@@ -7,7 +7,7 @@ export default class CreateEvent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: '',
+            name: '',
             title: '',
             isLoading: null,
             userId: ''
@@ -17,10 +17,13 @@ export default class CreateEvent extends Component {
     componentDidMount() {
         Auth.currentAuthenticatedUser().then(user => {
             this.setState({userId: user.username});
+        }).catch(ex => {
+            console.log(ex);
+            this.props.history.push("/login");
         });
     }
 
-    handleChange = (e, {name, value}) => this.setState({[name]: value})
+    handleChange = (e, {name, value}) => this.setState({[name]: value});
 
     handleSubmit = async e => {
         e.preventDefault();
@@ -30,11 +33,14 @@ export default class CreateEvent extends Component {
         let eventId = shortid.generate();
 
         try {
-            await this.createEvent({
+            let event = {
                 eventId: eventId,
-                user: this.state.user,
+                userId: this.state.userId,
+                name: this.state.name,
                 title: this.state.title
-            });
+            };
+            await this.createEvent(event);
+            console.log(event);
             console.log("event created");
 
             this.props.history.push('/event/' + eventId);
@@ -50,8 +56,8 @@ export default class CreateEvent extends Component {
         });
     }
 
-    render() {
-        const {user, title} = this.state;
+    renderCreateEventForm() {
+        const {name, title} = this.state;
 
         return (
             <div className='login-form'>
@@ -71,14 +77,14 @@ export default class CreateEvent extends Component {
                                     icon='user'
                                     iconPosition='left'
                                     placeholder='Your name'
-                                    name='user'
-                                    value={user}
+                                    name='name'
+                                    value={name}
                                     onChange={this.handleChange}
                                 />
                                 <Form.Input
                                     fluid icon='birthday'
                                     iconPosition='left'
-                                    placeholder='Eventname'
+                                    placeholder='Event title'
                                     name='title'
                                     value={title}
                                     onChange={this.handleChange}
@@ -89,6 +95,14 @@ export default class CreateEvent extends Component {
                     </Grid.Column>
                 </Grid>
                 <Loader active={this.state.isLoading}/>
+            </div>
+        );
+    }
+
+    render() {
+        return (
+            <div>
+                {this.renderCreateEventForm()}
             </div>
         );
     }
