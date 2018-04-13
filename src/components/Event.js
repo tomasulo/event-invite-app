@@ -74,7 +74,7 @@ export default class Event extends Component {
                 {event &&
                 <Container text style={{marginTop: '4em'}}>
 
-                    <Title title={event.title} user={event.user}/>
+                    <Title title={event.title} owner={event.owner}/>
 
                     <Header as='h3'>Description</Header>
 

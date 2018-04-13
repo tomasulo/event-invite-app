@@ -7,10 +7,8 @@ import {Auth} from "aws-amplify";
 class App extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             isAuthenticated: false,
-            isAuthenticating: true,
             activeItem: 'home'
         };
     }

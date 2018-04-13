@@ -7,7 +7,7 @@ export default class CreateEvent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
+            owner: '',
             title: '',
             isLoading: null,
             userId: ''
@@ -36,7 +36,7 @@ export default class CreateEvent extends Component {
             let event = {
                 eventId: eventId,
                 userId: this.state.userId,
-                name: this.state.name,
+                owner: this.state.owner,
                 title: this.state.title
             };
             await this.createEvent(event);
@@ -57,7 +57,7 @@ export default class CreateEvent extends Component {
     }
 
     renderCreateEventForm() {
-        const {name, title} = this.state;
+        const {owner, title} = this.state;
 
         return (
             <div className='login-form'>
@@ -77,8 +77,8 @@ export default class CreateEvent extends Component {
                                     icon='user'
                                     iconPosition='left'
                                     placeholder='Your name'
-                                    name='name'
-                                    value={name}
+                                    name='owner'
+                                    value={owner}
                                     onChange={this.handleChange}
                                 />
                                 <Form.Input
