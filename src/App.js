@@ -27,6 +27,7 @@ class App extends Component {
 
     async componentDidMount() {
         try {
+            // TODO this does not work properly...
             if (await Auth.currentSession()) {
                 this.userHasAuthenticated(true);
             }

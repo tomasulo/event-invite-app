@@ -13,7 +13,7 @@ export default ({childProps}) =>
         <AppliedRoute path="/" exact component={Home} props={childProps}/>
         <AppliedRoute path="/login" exact component={Login} props={childProps}/>
         <AppliedRoute path="/signup" exact component={Signup} props={childProps}/>
-        <AppliedRoute path="/event/:eventId" exact component={Event} props={childProps}/>
+        <AppliedRoute path="/event/:id" exact component={Event} props={childProps}/>
         <AppliedRoute path="/events/new" exact component={CreateEvent} props={childProps}/>
 
         {/* Finally, catch all unmatched routes */}

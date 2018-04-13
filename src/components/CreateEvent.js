@@ -14,40 +14,40 @@ export default class CreateEvent extends Component {
         };
     }
 
-    componentDidMount() {
-        Auth.currentAuthenticatedUser().then(user => {
-            this.setState({userId: user.username});
-        }).catch(ex => {
-            console.log(ex);
-            this.props.history.push("/login");
-        });
-    }
-
     handleChange = (e, {name, value}) => this.setState({[name]: value});
 
+    // TODO refactor login handling...
     handleSubmit = async e => {
         e.preventDefault();
 
         this.setState({isLoading: true});
 
-        let eventId = shortid.generate();
+        Auth.currentAuthenticatedUser().then(user => {
+            let userId = user.username;
+            let id = shortid.generate();
 
-        try {
-            let event = {
-                eventId: eventId,
-                userId: this.state.userId,
-                owner: this.state.owner,
-                title: this.state.title
-            };
-            await this.createEvent(event);
-            console.log(event);
-            console.log("event created");
+            try {
+                let event = {
+                    id: id,
+                    userId: userId,
+                    owner: this.state.owner,
+                    title: this.state.title
+                };
+                console.log(event);
 
-            this.props.history.push('/event/' + eventId);
-        } catch (e) {
-            alert(e);
-            this.setState({isLoading: false});
-        }
+                this.createEvent(event).then(() => {
+                    console.log("event created");
+                    this.props.history.push('/event/' + id);
+                });
+            } catch (e) {
+                alert(e);
+                this.setState({isLoading: false});
+            }
+
+        }).catch(ex => {
+            console.log(ex);
+            this.props.history.push("/login");
+        });
     };
 
     createEvent(event) {

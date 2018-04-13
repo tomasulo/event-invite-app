@@ -4,7 +4,7 @@ import {Attendance} from "./Attendance";
 import {Title} from "./Title";
 
 // TODO inject via environment
-const API = 'https://can6ek1adi.execute-api.eu-central-1.amazonaws.com/prod/events/';
+const API = 'https://xzy27n57nb.execute-api.eu-central-1.amazonaws.com/prod/events/';
 
 const options = [
     {key: 'yes', text: 'Yes', value: 'Yes'},
@@ -28,9 +28,10 @@ export default class Event extends Component {
     }
 
     componentDidMount() {
-        fetch(API + this.props.match.params.eventId)
+        fetch(API + this.props.match.params.id)
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 this.setState({event: data});
                 if (data.attendance) {
                     this.setState({attendance: data.attendance});
@@ -51,7 +52,7 @@ export default class Event extends Component {
             name: ''
         });
 
-        fetch(API + this.props.match.params.eventId + "/attendance", {
+        fetch(API + this.props.match.params.id + "/attendance", {
             method: 'PUT',
             body: JSON.stringify({
                 attendance: this.state.attendance
