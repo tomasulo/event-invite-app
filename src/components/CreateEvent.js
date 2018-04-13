@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import shortid from "shortid";
 import {API} from "aws-amplify/lib/index";
-import {Button, Dimmer, Form, Grid, Header, Loader, Segment} from "semantic-ui-react";
+import {Button, Form, Grid, Header, Loader, Segment} from "semantic-ui-react";
 
 export default class CreateEvent extends Component {
     constructor(props) {
@@ -81,9 +81,7 @@ export default class CreateEvent extends Component {
                         </Form>
                     </Grid.Column>
                 </Grid>
-                <Dimmer active={this.state.isLoading}>
-                    <Loader/>
-                </Dimmer>
+                <Loader active={this.state.isLoading}/>
             </div>
         );
     }
