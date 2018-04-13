@@ -19,10 +19,9 @@ class App extends Component {
         this.setState({isAuthenticated: authenticated});
     };
 
-
     handleItemClick = (e, {name}) => this.setState({activeItem: name});
 
-    handleLogout = async event => {
+    handleLogout = async e => {
         await Auth.signOut();
         this.userHasAuthenticated(false);
         this.props.history.push("/login");
@@ -33,8 +32,7 @@ class App extends Component {
             if (await Auth.currentSession()) {
                 this.userHasAuthenticated(true);
             }
-        }
-        catch (e) {
+        } catch (e) {
             if (e !== 'No current user') {
                 alert(e);
             }
@@ -55,7 +53,8 @@ class App extends Component {
                     <Menu pointing secondary>
                         <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick} as={Link}
                                    to='/'/>
-                        <Menu.Item name='messages' active={activeItem === 'messages'} onClick={this.handleItemClick}/>
+                        <Menu.Item name='events' active={activeItem === 'events'} onClick={this.handleItemClick}
+                                   as={Link} to='/events/new'/>
                         <Menu.Item name='friends' active={activeItem === 'friends'} onClick={this.handleItemClick}/>
                         {this.state.isAuthenticated
                             ? <Menu.Menu position='right'>
