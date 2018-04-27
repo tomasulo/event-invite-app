@@ -10,16 +10,14 @@
     "semantic-ui": "^2.3.1",
     "semantic-ui-css": "^2.3.1",
     "semantic-ui-react": "^0.79.0",
-    "shortid": "^2.2.8"
+    "shortid": "^2.2.8",
+    "aws-amplify": "^0.2.15",
+    "react-bootstrap": "^0.32.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  },
-  "devDependencies": {
-    "aws-amplify": "^0.2.15",
-    "react-bootstrap": "^0.32.1"
   }
 }
