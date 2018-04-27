@@ -14,23 +14,30 @@ export default class CreateEvent extends Component {
         };
     }
 
+    componentDidMount() {
+        if (!this.props.isAuthenticated) {
+            console.log("not authenticated");
+            this.props.history.push("/login");
+        }
+    }
+
     handleChange = (e, {name, value}) => this.setState({[name]: value});
 
     handleSubmit = async e => {
         e.preventDefault();
 
         this.setState({isLoading: true});
-        let id = shortid.generate();
+        let eventId = shortid.generate();
         try {
             let event = {
-                id: id,
+                eventId: eventId,
                 owner: this.state.owner,
                 title: this.state.title
             };
             console.log(event);
             this.createEvent(event).then(() => {
                 console.log("event created");
-                this.props.history.push('/event/' + id);
+                this.props.history.push('/event/' + eventId);
             });
         } catch (e) {
             alert(e);

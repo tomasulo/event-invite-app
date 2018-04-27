@@ -19,7 +19,7 @@ export default class Event extends Component {
         this.state = {
             event: null,
             attendance: [],
-            rsvp: '',
+            rsvp: 'Yes',
             name: ''
         };
         this.updateAttendance = this.updateAttendance.bind(this);
@@ -28,6 +28,7 @@ export default class Event extends Component {
     }
 
     componentDidMount() {
+        // TODO use other api
         fetch(API + this.props.match.params.id)
             .then(response => response.json())
             .then(data => {
@@ -39,7 +40,7 @@ export default class Event extends Component {
             });
     }
 
-    handleChange = (e, {name, value}) => this.setState({[name]: value})
+    handleChange = (e, {name, value}) => this.setState({[name]: value});
 
     updateAttendance = () => {
         this.state.attendance.push({
@@ -48,10 +49,11 @@ export default class Event extends Component {
         });
 
         this.setState({
-            rsvp: '',
+            rsvp: 'Yes',
             name: ''
         });
 
+        // TODO use other API
         fetch(API + this.props.match.params.id + "/attendance", {
             method: 'PUT',
             body: JSON.stringify({
