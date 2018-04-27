@@ -1,25 +1,36 @@
 import React, {Component} from "react";
 import {Container, Header} from "semantic-ui-react";
-
-const API = 'https://xzy27n57nb.execute-api.eu-central-1.amazonaws.com/prod/events/';
+import {API} from "aws-amplify/lib/index";
 
 export default class Home extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            isLoading: true,
+            events: []
+        };
     }
 
-    // componentDidMount() {
-    //     if (this.props.isAuthenticated) {
-    //         fetch(API)
-    //             .then(response => response.json())
-    //             .then(data => {
-    //                 console.log(data);
-    //             });
-    //     } else {
-    //         console.log("not authenticated")
-    //     }
-    // }
+    async componentDidMount() {
+        if (!this.props.isAuthenticated) {
+            console.log("not authenticated");
+            this.props.history.push("/login");
+            return;
+        }
 
+        try {
+            const events = await this.events();
+            this.setState({events});
+            console.log(events);
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    events() {
+        return API.get("events", "/events");
+    }
 
     render() {
         return (
