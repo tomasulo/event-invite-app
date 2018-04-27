@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Container, Header} from "semantic-ui-react";
+import {Container, Header, List} from "semantic-ui-react";
 import {API} from "aws-amplify/lib/index";
 
 export default class Home extends Component {
@@ -22,21 +22,55 @@ export default class Home extends Component {
         try {
             const events = await this.events();
             this.setState({events});
-            console.log(events);
         } catch (e) {
-            console.log(e)
+            alert(e);
         }
+
+        this.setState({isLoading: false});
     }
 
     events() {
         return API.get("events", "/events");
     }
 
-    render() {
+    renderEventsList(events) {
+        console.log(events);
+        return [{}].concat(events).map(
+            (event, i) =>
+                <List.Item key={i}>
+                    <List.Icon name='github' size='large' verticalAlign='middle'/>
+                    <List.Content>
+                        {/*<List.Header as='a'>{event.eventId}</List.Header>*/}
+                        <List.Description as='a' href={`/events/${event.eventId}`}>{event.title}</List.Description>
+                    </List.Content>
+                </List.Item>
+        );
+    }
+
+    renderEvents() {
+        return (
+            <Container text style={{marginTop: '4em'}}>
+                <Header as='h1'>Your Events</Header>
+                <List divided relaxed>
+                    {!this.state.isLoading && this.renderEventsList(this.state.events)}
+                </List>
+            </Container>
+        );
+    }
+
+    renderLander() {
         return (
             <Container text style={{marginTop: '4em'}}>
                 <Header as='h1'>RSVP ME - A simple event website</Header>
             </Container>
+        );
+    }
+
+    render() {
+        return (
+            <div className="Home">
+                {this.props.isAuthenticated ? this.renderEvents() : this.renderLander()}
+            </div>
         );
     }
 }

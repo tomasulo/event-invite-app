@@ -37,7 +37,7 @@ export default class CreateEvent extends Component {
             console.log(event);
             this.createEvent(event).then(() => {
                 console.log("event created");
-                this.props.history.push('/event/' + eventId);
+                this.props.history.push('/events/' + eventId);
             });
         } catch (e) {
             alert(e);
