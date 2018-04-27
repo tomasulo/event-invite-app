@@ -3,7 +3,7 @@ import shortid from "shortid";
 import {API} from "aws-amplify/lib/index";
 import {Button, Form, Grid, Header, Loader, Segment} from "semantic-ui-react";
 
-export default class CreateEvent extends Component {
+export default class NewEvent extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -55,7 +55,7 @@ export default class CreateEvent extends Component {
         const {owner, title} = this.state;
 
         return (
-            <div className='login-form'>
+            <div style={{marginTop: '4em'}}>
                 <Grid
                     textAlign='center'
                     style={{height: '100%'}}

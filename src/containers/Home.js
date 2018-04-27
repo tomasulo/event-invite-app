@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Container, Header, List} from "semantic-ui-react";
 import {API} from "aws-amplify/lib/index";
+import {Link} from "react-router-dom";
 
 export default class Home extends Component {
     constructor(props) {
@@ -35,15 +36,27 @@ export default class Home extends Component {
 
     renderEventsList(events) {
         console.log(events);
-        return [{}].concat(events).map(
+
+        const listItems = [{}].concat(events).map(
             (event, i) =>
-                <List.Item key={i}>
-                    <List.Icon name='github' size='large' verticalAlign='middle'/>
-                    <List.Content>
-                        {/*<List.Header as='a'>{event.eventId}</List.Header>*/}
-                        <List.Description as='a' href={`/events/${event.eventId}`}>{event.title}</List.Description>
-                    </List.Content>
-                </List.Item>
+                i !== 0
+                    ? <List.Item key={i} as={Link} to={`/events/${event.eventId}`}>
+                        <List.Icon name='github' size='large' verticalAlign='middle'/>
+                        <List.Content>
+                            <List.Header>{event.title}</List.Header>
+                            <List.Description>{"Created: " + new Date(event.createdAt).toLocaleString('de-DE')}</List.Description>
+                        </List.Content>
+                    </List.Item>
+                    : <List.Item key={i} as={Link} to={`/events/new`}>
+                        <List.Icon name='plus' size='large' verticalAlign='middle'/>
+                        <List.Content>
+                            <List.Header>Create a new event</List.Header>
+                        </List.Content>
+                    </List.Item>
+        );
+
+        return (
+            <List divided relaxed>{listItems}</List>
         );
     }
 
@@ -51,9 +64,7 @@ export default class Home extends Component {
         return (
             <Container text style={{marginTop: '4em'}}>
                 <Header as='h1'>Your Events</Header>
-                <List divided relaxed>
-                    {!this.state.isLoading && this.renderEventsList(this.state.events)}
-                </List>
+                {!this.state.isLoading && this.renderEventsList(this.state.events)}
             </Container>
         );
     }

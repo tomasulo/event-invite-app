@@ -34,7 +34,7 @@ export default class Login extends Component {
         const {isAuthenticated} = this.state;
 
         return (
-            <div className='login-form'>
+            <div style={{marginTop: '4em'}}>
                 <Grid
                     textAlign='center'
                     style={{height: '100%'}}

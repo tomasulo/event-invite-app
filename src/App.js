@@ -50,11 +50,8 @@ class App extends Component {
             <div>
                 <Container text>
                     <Menu pointing secondary>
-                        <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick} as={Link}
-                                   to='/'/>
-                        <Menu.Item name='events' active={activeItem === 'events'} onClick={this.handleItemClick}
-                                   as={Link} to='/events/new'/>
-                        <Menu.Item name='friends' active={activeItem === 'friends'} onClick={this.handleItemClick}/>
+                        <Menu.Item header as={Link} to='/'> RSVP ME</Menu.Item>
+
                         {this.state.isAuthenticated
                             ? <Menu.Menu position='right'>
                                 <Menu.Item name='logout' active={activeItem === 'logout'}

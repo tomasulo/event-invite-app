@@ -57,8 +57,7 @@ export default class Signup extends Component {
 
     renderSignupForm() {
         return (
-
-            <div className='login-form'>
+            <div style={{marginTop: '4em'}}>
                 <Grid
                     textAlign='center'
                     style={{height: '100%'}}
@@ -100,7 +99,7 @@ export default class Signup extends Component {
 
     renderConfirmationForm() {
         return (
-            <div className='login-form'>
+            <div style={{marginTop: '4em'}}>
                 <Grid
                     textAlign='center'
                     style={{height: '100%'}}
@@ -126,7 +125,8 @@ export default class Signup extends Component {
                                     header='Confirmation code sent'
                                     content="Please enter the confirmation code from our email"
                                 />
-                                <Button color='teal' fluid size='large' onClick={this.handleConfirmationSubmit}>Confirm</Button>
+                                <Button color='teal' fluid size='large'
+                                        onClick={this.handleConfirmationSubmit}>Confirm</Button>
                             </Segment>
                         </Form>
                     </Grid.Column>
