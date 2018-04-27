@@ -28,7 +28,6 @@ export default class Event extends Component {
     }
 
     componentDidMount() {
-        // TODO use other api
         fetch(API + this.props.match.params.id)
             .then(response => response.json())
             .then(data => {
@@ -53,7 +52,6 @@ export default class Event extends Component {
             name: ''
         });
 
-        // TODO use other API
         fetch(API + this.props.match.params.id + "/attendance", {
             method: 'PUT',
             body: JSON.stringify({
