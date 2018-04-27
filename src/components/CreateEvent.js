@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import shortid from "shortid";
-import {API, Auth} from "aws-amplify/lib/index";
+import {API} from "aws-amplify/lib/index";
 import {Button, Form, Grid, Header, Loader, Segment} from "semantic-ui-react";
 
 export default class CreateEvent extends Component {
@@ -16,38 +16,26 @@ export default class CreateEvent extends Component {
 
     handleChange = (e, {name, value}) => this.setState({[name]: value});
 
-    // TODO refactor login handling...
     handleSubmit = async e => {
         e.preventDefault();
 
         this.setState({isLoading: true});
-
-        Auth.currentAuthenticatedUser().then(user => {
-            let userId = user.username;
-            let id = shortid.generate();
-
-            try {
-                let event = {
-                    id: id,
-                    userId: userId,
-                    owner: this.state.owner,
-                    title: this.state.title
-                };
-                console.log(event);
-
-                this.createEvent(event).then(() => {
-                    console.log("event created");
-                    this.props.history.push('/event/' + id);
-                });
-            } catch (e) {
-                alert(e);
-                this.setState({isLoading: false});
-            }
-
-        }).catch(ex => {
-            console.log(ex);
-            this.props.history.push("/login");
-        });
+        let id = shortid.generate();
+        try {
+            let event = {
+                id: id,
+                owner: this.state.owner,
+                title: this.state.title
+            };
+            console.log(event);
+            this.createEvent(event).then(() => {
+                console.log("event created");
+                this.props.history.push('/event/' + id);
+            });
+        } catch (e) {
+            alert(e);
+            this.setState({isLoading: false});
+        }
     };
 
     createEvent(event) {
