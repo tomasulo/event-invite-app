@@ -2,6 +2,10 @@ import React, {Component} from "react";
 import shortid from "shortid";
 import {API} from "aws-amplify/lib/index";
 import {Button, Form, Grid, Header, Loader, Segment} from "semantic-ui-react";
+import 'moment/locale/de';
+import DatePicker from 'react-datepicker';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default class NewEvent extends Component {
     constructor(props) {
@@ -10,7 +14,10 @@ export default class NewEvent extends Component {
             owner: '',
             title: '',
             isLoading: null,
-            userId: ''
+            userId: '',
+            date: new Date(),
+            startDate: null,
+            endDate: null
         };
     }
 
@@ -22,6 +29,14 @@ export default class NewEvent extends Component {
     }
 
     handleChange = (e, {name, value}) => this.setState({[name]: value});
+
+    updateStartDate = date => {
+        this.setState({startDate: date});
+    };
+
+    updateEndDate = date => {
+        this.setState({endDate: date});
+    };
 
     handleSubmit = async e => {
         e.preventDefault();
@@ -84,12 +99,37 @@ export default class NewEvent extends Component {
                                     value={title}
                                     onChange={this.handleChange}
                                 />
+
+                                <Form.Field control={DatePicker}
+                                            selected={this.state.startDate}
+                                            onChange={this.updateStartDate}
+                                            showTimeSelect
+                                            timeFormat="HH:mm"
+                                            timeIntervals={15}
+                                            dateFormat="LLL"
+                                            timeCaption="Uhrzeit"
+                                            placeholderText="Startzeit auswählen"/>
+
+                                <Form.Field control={DatePicker}
+                                            selected={this.state.endDate}
+                                            onChange={this.updateEndDate}
+                                            showTimeSelect
+                                            timeFormat="HH:mm"
+                                            timeIntervals={15}
+                                            dateFormat="LLL"
+                                            timeCaption="Uhrzeit"
+                                            placeholderText="Endzeit auswählen"/>
+
                                 <Button color='teal' fluid size='large'>Create</Button>
                             </Segment>
                         </Form>
                     </Grid.Column>
                 </Grid>
                 <Loader active={this.state.isLoading}/>
+
+
+                {/*https://github.com/YouCanBookMe/react-datetime*/}
+
             </div>
         );
     }
