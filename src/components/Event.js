@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import {Container, Form, Header} from "semantic-ui-react";
+import {Container, Form, Header, Icon} from "semantic-ui-react";
 import {Attendance} from "./Attendance";
 import {Title} from "./Title";
+import {API} from "aws-amplify/lib/index";
 
 // TODO inject via environment
-const API = 'https://xzy27n57nb.execute-api.eu-central-1.amazonaws.com/prod/events/';
+const API_URL = 'https://xzy27n57nb.execute-api.eu-central-1.amazonaws.com/prod/events/';
 
 const options = [
     {key: 'yes', text: 'Yes', value: 'Yes'},
@@ -28,7 +29,7 @@ export default class Event extends Component {
     }
 
     componentDidMount() {
-        fetch(API + this.props.match.params.id)
+        fetch(API_URL + this.props.match.params.id)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -52,7 +53,7 @@ export default class Event extends Component {
             name: ''
         });
 
-        fetch(API + this.props.match.params.id + "/attendance", {
+        fetch(API_URL + this.props.match.params.id + "/attendance", {
             method: 'PUT',
             body: JSON.stringify({
                 attendance: this.state.attendance
@@ -66,6 +67,32 @@ export default class Event extends Component {
 
     updateName = (e, {value}) => {
         this.setState({name: value})
+    };
+
+    deleteEvent() {
+        return API.del("events", `/events/${this.props.match.params.id}`);
+    }
+
+    handleDelete = async event => {
+        event.preventDefault();
+
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this event?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        this.setState({isDeleting: true});
+
+        try {
+            await this.deleteEvent();
+            this.props.history.push("/");
+        } catch (e) {
+            alert(e);
+            this.setState({isDeleting: false});
+        }
     };
 
     render() {
@@ -102,8 +129,8 @@ export default class Event extends Component {
                                          value={rsvp}/>
                         </Form.Group>
                         <Form.Button>Save</Form.Button>
+                        <Icon link name='trash' onClick={this.handleDelete} size='large'/>
                     </Form>
-
                 </Container>}
             </div>
         );

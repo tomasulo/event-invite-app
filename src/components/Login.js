@@ -9,9 +9,16 @@ export default class Login extends Component {
 
         this.state = {
             email: "",
-            password: "",
-            isAuthenticated: false,
+            password: ""
         };
+    }
+
+    async componentDidMount() {
+        if (this.props.isAuthenticated) {
+            console.log("already authenticated");
+            this.props.history.push("/");
+            return;
+        }
     }
 
     handleChange = (e, {name, value}) => this.setState({[name]: value})
@@ -31,7 +38,7 @@ export default class Login extends Component {
 
     render() {
 
-        const {isAuthenticated} = this.state;
+        const isAuthenticated = this.props.isAuthenticated;
 
         return (
             <div style={{marginTop: '4em'}}>

@@ -9,6 +9,7 @@ class App extends Component {
         super(props);
         this.state = {
             isAuthenticated: false,
+            isAuthenticating: true,
             activeItem: 'home'
         };
     }
@@ -27,17 +28,17 @@ class App extends Component {
 
     async componentDidMount() {
         try {
-            // TODO this does not work properly...
             if (await Auth.currentSession()) {
                 this.userHasAuthenticated(true);
             }
-        } catch (e) {
+        }
+        catch(e) {
             if (e !== 'No current user') {
                 alert(e);
             }
         }
 
-        this.setState({isAuthenticating: false});
+        this.setState({ isAuthenticating: false });
     }
 
     render() {
@@ -45,8 +46,13 @@ class App extends Component {
             isAuthenticated: this.state.isAuthenticated,
             userHasAuthenticated: this.userHasAuthenticated
         };
+
+        console.log("RENDER OR APP")
+        console.log(childProps);
+
         const {activeItem} = this.state;
         return (
+            !this.state.isAuthenticating &&
             <div>
                 <Container text>
                     <Menu pointing secondary>
