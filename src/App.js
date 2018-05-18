@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Container, Menu} from "semantic-ui-react";
+import {Container, Icon, Menu} from "semantic-ui-react";
 import Routes from "./Routes";
 import {Link, withRouter} from "react-router-dom";
 import {Auth} from "aws-amplify";
@@ -46,18 +46,13 @@ class App extends Component {
             isAuthenticated: this.state.isAuthenticated,
             userHasAuthenticated: this.userHasAuthenticated
         };
-
-        console.log("RENDER OR APP")
-        console.log(childProps);
-
         const {activeItem} = this.state;
         return (
             !this.state.isAuthenticating &&
             <div>
                 <Container text>
                     <Menu pointing secondary>
-                        <Menu.Item header as={Link} to='/'> RSVP ME</Menu.Item>
-
+                        <Menu.Item header as={Link} to='/'><Icon name='group' size='large'/>RSVP</Menu.Item>
                         {this.state.isAuthenticated
                             ? <Menu.Menu position='right'>
                                 <Menu.Item name='logout' active={activeItem === 'logout'}

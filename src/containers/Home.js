@@ -14,17 +14,13 @@ export default class Home extends Component {
     }
 
     async componentDidMount() {
-        if (!this.props.isAuthenticated) {
-            console.log("not authenticated");
-            this.props.history.push("/login");
-            return;
-        }
-
-        try {
-            const events = await this.events();
-            this.setState({events});
-        } catch (e) {
-            alert(e);
+        if (this.props.isAuthenticated) {
+            try {
+                const events = await this.events();
+                this.setState({events});
+            } catch (e) {
+                alert(e);
+            }
         }
 
         this.setState({isLoading: false});
@@ -35,8 +31,6 @@ export default class Home extends Component {
     }
 
     renderEventsList(events) {
-        console.log(events);
-
         const listItems = [{}].concat(events).map(
             (event, i) =>
                 i !== 0
@@ -72,7 +66,7 @@ export default class Home extends Component {
     renderLander() {
         return (
             <Container text style={{marginTop: '4em'}}>
-                <Header as='h1'>RSVP ME - A simple event website</Header>
+                <Header as='h1'>RSVP - A simple event website</Header>
             </Container>
         );
     }
