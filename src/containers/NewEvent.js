@@ -23,7 +23,6 @@ export default class NewEvent extends Component {
 
     componentDidMount() {
         if (!this.props.isAuthenticated) {
-            console.log("not authenticated");
             this.props.history.push("/login");
         }
     }
