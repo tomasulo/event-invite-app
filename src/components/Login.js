@@ -15,7 +15,6 @@ export default class Login extends Component {
 
     async componentDidMount() {
         if (this.props.isAuthenticated) {
-            console.log("already authenticated");
             this.props.history.push("/");
             return;
         }
