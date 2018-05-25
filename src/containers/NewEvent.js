@@ -16,8 +16,8 @@ export default class NewEvent extends Component {
             isLoading: null,
             userId: '',
             date: new Date(),
-            startDate: null,
-            endDate: null
+            startTime: null,
+            endTime: null
         };
     }
 
@@ -30,12 +30,12 @@ export default class NewEvent extends Component {
 
     handleChange = (e, {name, value}) => this.setState({[name]: value});
 
-    updateStartDate = date => {
-        this.setState({startDate: date});
+    updateStartTime = date => {
+        this.setState({startTime: date});
     };
 
-    updateEndDate = date => {
-        this.setState({endDate: date});
+    updateEndTime = date => {
+        this.setState({endTime: date});
     };
 
     handleSubmit = async e => {
@@ -47,11 +47,12 @@ export default class NewEvent extends Component {
             let event = {
                 eventId: eventId,
                 owner: this.state.owner,
-                title: this.state.title
+                title: this.state.title,
+                startTime: this.state.startTime.toISOString(),
+                endTime: this.state.endTime.toISOString()
             };
             console.log(event);
             this.createEvent(event).then(() => {
-                console.log("event created");
                 this.props.history.push('/events/' + eventId);
             });
         } catch (e) {
@@ -101,24 +102,24 @@ export default class NewEvent extends Component {
                                 />
 
                                 <Form.Field control={DatePicker}
-                                            selected={this.state.startDate}
-                                            onChange={this.updateStartDate}
+                                            selected={this.state.startTime}
+                                            onChange={this.updateStartTime}
                                             showTimeSelect
                                             timeFormat="HH:mm"
                                             timeIntervals={15}
                                             dateFormat="LLL"
-                                            timeCaption="Uhrzeit"
-                                            placeholderText="Startzeit auswählen"/>
+                                            timeCaption="Time"
+                                            placeholderText="Select start"/>
 
                                 <Form.Field control={DatePicker}
-                                            selected={this.state.endDate}
-                                            onChange={this.updateEndDate}
+                                            selected={this.state.endTime}
+                                            onChange={this.updateEndTime}
                                             showTimeSelect
                                             timeFormat="HH:mm"
                                             timeIntervals={15}
                                             dateFormat="LLL"
-                                            timeCaption="Uhrzeit"
-                                            placeholderText="Endzeit auswählen"/>
+                                            timeCaption="Time"
+                                            placeholderText="Select end"/>
 
                                 <Button color='teal' fluid size='large'>Create</Button>
                             </Segment>
@@ -126,10 +127,6 @@ export default class NewEvent extends Component {
                     </Grid.Column>
                 </Grid>
                 <Loader active={this.state.isLoading}/>
-
-
-                {/*https://github.com/YouCanBookMe/react-datetime*/}
-
             </div>
         );
     }
